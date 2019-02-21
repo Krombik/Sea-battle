@@ -3,7 +3,8 @@
     <table>
       <tr v-for="(items,i) in field" :key="i">
         <td v-for="(item,j) in items" :key="j">
-          <span v-if="item>=0" class="empty" @click="shot(i,j,item)"></span>
+          <span v-if="!result && item>0" class="alive"></span>
+          <span v-else-if="item>=0" class="empty" @click="shot(i,j,item)"></span>
           <span v-else-if="item=='n'" class="nosence"></span>
           <span v-else-if="item=='m'" class="miss"></span>
           <span v-else-if="item<0" class="hit"></span>
@@ -22,7 +23,7 @@ export default {
       field: []
     };
   },
-  props: ["turn", "shipCreation"],
+  props: ["turn", "shipCreation", "result"],
   methods: {
     shot(i, j, item) {
       if (item == 0) {
@@ -58,7 +59,7 @@ export default {
           }
         }
       this.$set(this.field, i, this.field[i]);
-      if (this.ships.every(item => item == undefined)) alert("you win!");
+      if (this.ships.every(item => item == undefined)) this.$emit("endgame", 1);
     }
   },
   created() {
@@ -74,25 +75,23 @@ export default {
 </script>
 
 <style>
-.computer-field {
-  margin-left: 50px;
-}
 .empty {
   background: #fff;
 }
 .alive {
-  background: rgb(122, 184, 0);
+  background: url("../assets/alive.png");
 }
 .hit {
-  background: rgb(255, 165, 0);
+  background: url("../assets/hit.png"), url("../assets/alive.png");
 }
 .dead {
-  background: red;
+  background: url("../assets/dead.png");
 }
 .miss {
-  background: gray;
+  background: url(/img/miss.60ae0c4b.png) no-repeat 7px 8px;
+  background-size: 32% !important;
 }
 .nosence {
-  background: turquoise;
+  background: url("../assets/nosence.png");
 }
 </style>

@@ -119,34 +119,39 @@ export default {
               }
             let next = [],
               t = 0;
-            if (i - 1 >= 0 && this.field[i - 1][j] >= 0) next[t++] = [i - 1, j];
-            else if (i - 1 < 0)
-              next[t++] = [this.firstHit[0] + 1, this.firstHit[1]];
-            if (j - 1 >= 0 && this.field[i][j - 1] >= 0) next[t++] = [i, j - 1];
-            else if (j - 1 < 0)
-              next[t++] = [this.firstHit[0], this.firstHit[1] + 1];
-            if (i + 1 < 10 && this.field[i + 1][j] >= 0) next[t++] = [i + 1, j];
-            else if (i + 1 == 10)
-              next[t++] = [this.firstHit[0] - 1, this.firstHit[1]];
-            if (j + 1 < 10 && this.field[i][j + 1] >= 0) next[t++] = [i, j + 1];
-            else if (j + 1 == 10)
-              next[t++] = [this.firstHit[0], this.firstHit[1] + 1];
-            if (next.length > 0) {
-              next = next[Math.floor(Math.random() * next.length)];
-              i = next[0];
-              j = next[1];
+            if (i - 1 < 0 && this.field[i + 1][j] < 0)
+              [i, j] = [this.firstHit[0] + 1, this.firstHit[1]];
+            else if (j - 1 < 0 && this.field[i][j + 1] < 0)
+              [i, j] = [this.firstHit[0], this.firstHit[1] + 1];
+            else if (i + 1 == 10 && this.field[i - 1][j] < 0)
+              [i, j] = [this.firstHit[0] - 1, this.firstHit[1]];
+            else if (j + 1 == 10 && this.field[i][j - 1] < 0)
+              [i, j] = [this.firstHit[0], this.firstHit[1] + 1];
+            else {
+              if (i - 1 >= 0 && this.field[i - 1][j] >= 0)
+                next[t++] = [i - 1, j];
+              if (j - 1 >= 0 && this.field[i][j - 1] >= 0)
+                next[t++] = [i, j - 1];
+              if (i + 1 < 10 && this.field[i + 1][j] >= 0)
+                next[t++] = [i + 1, j];
+              if (j + 1 < 10 && this.field[i][j + 1] >= 0)
+                next[t++] = [i, j + 1];
+              if (next.length > 0) {
+                next = next[Math.floor(Math.random() * next.length)];
+                i = next[0];
+                j = next[1];
+              } else
+                do {
+                  i = Math.floor(Math.random() * 10);
+                  j = Math.floor(Math.random() * 10);
+                } while (!(this.field[i][j] >= 0));
             }
-            if (i == undefined || j == undefined || next.length == 0)
-              do {
-                i = Math.floor(Math.random() * 10);
-                j = Math.floor(Math.random() * 10);
-              } while (!(this.field[i][j] >= 0));
             item = this.field[i][j];
           }
           this.$set(this.field, i, this.field[i]);
         }
         if (this.ships.every(item => item == undefined)) {
-          alert("you lost!");
+          this.$emit("endgame", 0);
           break;
         }
       } while (hit);
@@ -168,18 +173,29 @@ td {
   height: 25px;
   width: 25px;
   text-align: center;
-  border: 1px solid black;
+  border: 4px solid transparent;
+  border-top: 4px solid;
+  border-left: 4px solid;
+  border-image: url("../assets/border.png") 36 / 30px round;
   padding: 0;
   margin: -2px -1px -1px 0px;
   display: inline-block;
+  position: relative;
+}
+td:nth-child(10n) {
+  border-right: 4px solid;
+}
+tr:nth-child(10n) td {
+  border-bottom: 4px solid;
 }
 td span {
   display: block;
-  height: 100%;
-  width: 100%;
+  background-size: cover !important;
+  height: 125%;
+  width: 125%;
+  position: absolute;
+  top: -2px;
+  left: -2px;
   user-select: none;
-}
-div {
-  float: left;
 }
 </style>

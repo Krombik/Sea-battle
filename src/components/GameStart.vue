@@ -18,8 +18,10 @@
         </td>
       </tr>
     </table>
-    <input type="button" value="Random" @click="randomShipsCreation">
-    <input type="button" value="Start game" @click="startGame">
+    <div class="buttons">
+      <input type="button" value="Random" @click="randomShipsCreation" class="rnd">
+      <input type="button" value="Start game" @click="startGame" class="start">
+    </div>
   </div>
 </template>
 
@@ -49,8 +51,7 @@ export default {
       this.shipCounteOnField = [0, 0, 0, 0];
       this.ships = [undefined].concat(this.randomShipCreation());
       for (let i = 1; i < this.ships.length; i++)
-        for (let j = 0; j < this.ships[i].length; j++)
-          this.field[this.ships[i][j][0]][this.ships[i][j][1]] = i;
+        this.ships[i].forEach(item => (this.field[item[0]][item[1]] = i));
       this.$set(this.field, 0, this.field[0]);
     },
     shipDelete(item) {
@@ -206,22 +207,23 @@ export default {
 </script>
 
 <style>
-td {
-  height: 25px;
-  width: 25px;
-  text-align: center;
-  border: 1px solid black;
+@font-face {
+  font-family: Stroke;
+  src: url("../assets/fonts/Stroke.otf");
+}
+input[type="button"] {
   padding: 0;
-  margin: -2px -1px -1px 0px;
-  display: inline-block;
-}
-td span {
+  border: 4px solid;
+  border-image: url("../assets/border.png") 36 / 30px round;
+  font-family: Stroke;
+  border-radius: 5px;
+  color: #1986be;
+  margin: auto;
+  width: 125px;
+  height: 40px;
+  font-size: 22px;
+  margin-bottom: 10px;
   display: block;
-  height: 100%;
-  width: 100%;
-  user-select: none;
-}
-div {
-  float: left;
+  background: #fff;
 }
 </style>
