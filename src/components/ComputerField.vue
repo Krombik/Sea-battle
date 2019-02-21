@@ -68,8 +68,7 @@ export default {
       for (let j = 0; j < 10; j++) this.field[i][j] = 0;
     }
     for (let i = 1; i < this.ships.length; i++)
-      for (let j = 0; j < this.ships[i].length; j++)
-        this.field[this.ships[i][j][0]][this.ships[i][j][1]] = i;
+      this.ships[i].forEach(item => (this.field[item[0]][item[1]] = i));
   }
 };
 </script>

@@ -1,28 +1,40 @@
 <template>
   <div id="app">
-    <PlayerField :turn="turn" :shipCreation="shipCreation" @nextturn="nextturn"></PlayerField>
-    <ComputerField :turn="turn" :shipCreation="shipCreation" @nextturn="nextturn"></ComputerField>
+    <GameStart v-if="!gameStart" @startgame="startgame" :randomShipCreation="shipCreation"></GameStart>
+    <div v-else>
+      <PlayerField :turn="turn" @nextturn="nextturn" :ships="playerShips"></PlayerField>
+      <ComputerField :turn="turn" :shipCreation="shipCreation" @nextturn="nextturn"></ComputerField>
+    </div>
   </div>
 </template>
 
 <script>
+import GameStart from "./components/GameStart";
 import PlayerField from "./components/PlayerField";
 import ComputerField from "./components/ComputerField";
 
 export default {
   name: "app",
   components: {
+    GameStart,
     PlayerField,
     ComputerField
   },
   data() {
     return {
-      turn: 0
+      turn: 0,
+      gameStart: false,
+      playerShips: []
     };
   },
   methods: {
     nextturn(turn) {
       this.turn = turn;
+    },
+    startgame(ships) {
+      this.gameStart = true;
+      // this.$emit("ongamestart", ships);
+      this.playerShips = ships;
     },
     shipCreation() {
       let type,
